@@ -5541,94 +5541,103 @@ static struct attribute_group sec_touch_factory_attr_group = {
 
 int sec_touch_sysfs(struct himax_ts_data *data)
 {
-	int ret;
+    int ret;
 
-	/* /sys/class/sec/tsp */
-	ret = sec_cmd_init_without_platdata(&data->sec, sec_cmds,
-		ARRAY_SIZE(sec_cmds), SEC_CLASS_DEVT_TSP, &sec_touch_factory_attr_group);
-	if (ret < 0) {
-		E("%s %s Failed to create device (tsp)!\n",
-				HIMAX_LOG_TAG, __func__);
-		goto err_init_cmd;
-	}
+    /* /sys/class/sec/tsp */
+    ret = sec_cmd_init(&data->sec, sec_cmds, ARRAY_SIZE(sec_cmds), SEC_CLASS_DEVT_TSP);
+    if (ret < 0) {
+        E("%s %s Failed to create device (tsp)!\n", HIMAX_LOG_TAG, __func__);
+        goto err_init_cmd;
+    }
 
-	data->sec.wait_cmd_result_done = true;
+    data->sec.wait_cmd_result_done = true;
 
-	I("Now init rawdata buffs\n");
-	g_sec_raw_buff = kzalloc(sizeof(struct sec_rawdata_buffs), GFP_KERNEL);
-	g_sec_raw_buff->_rawdata =
-		kzalloc(sizeof(uint32_t) * ic_data->HX_TX_NUM * ic_data->HX_RX_NUM,
-			GFP_KERNEL);
-	g_sec_raw_buff->_open =
-		kzalloc(sizeof(uint32_t) * ic_data->HX_TX_NUM * ic_data->HX_RX_NUM,
-			GFP_KERNEL);
-	g_sec_raw_buff->_mopen =
-		kzalloc(sizeof(uint32_t) * ic_data->HX_TX_NUM * ic_data->HX_RX_NUM,
-			GFP_KERNEL);
-	g_sec_raw_buff->_short =
-		kzalloc(sizeof(uint32_t) * ic_data->HX_TX_NUM * ic_data->HX_RX_NUM,
-			GFP_KERNEL);
-	g_sec_raw_buff->_noise =
-		kzalloc(sizeof(int) * ic_data->HX_TX_NUM * ic_data->HX_RX_NUM,
-			GFP_KERNEL);
-	g_sec_raw_buff->_lp_rawdata =
-		kzalloc(sizeof(uint32_t) * ic_data->HX_TX_NUM * ic_data->HX_RX_NUM,
-			GFP_KERNEL);
-	g_sec_raw_buff->_lp_noise =
-		kzalloc(sizeof(int) * ic_data->HX_TX_NUM * ic_data->HX_RX_NUM,
-			GFP_KERNEL);
-	g_sec_raw_buff->_gap_ver =
-		kzalloc(sizeof(int) * (ic_data->HX_TX_NUM - g_gap_vertical_partial) * ic_data->HX_RX_NUM, GFP_KERNEL);
-	g_sec_raw_buff->_gap_hor =
-		kzalloc(sizeof(int) * ic_data->HX_TX_NUM * (ic_data->HX_RX_NUM - g_gap_horizontal_partial), GFP_KERNEL);
-	g_sec_raw_buff->f_crtra_ready = HX_THRESHOLD_NOT_READY;
-	g_sec_raw_buff->f_ready_rawdata = HX_RAWDATA_NOT_READY;
-	g_sec_raw_buff->f_ready_open = HX_RAWDATA_NOT_READY;
-	g_sec_raw_buff->f_ready_mopen = HX_RAWDATA_NOT_READY;
-	g_sec_raw_buff->f_ready_short = HX_RAWDATA_NOT_READY;
-	g_sec_raw_buff->f_ready_noise = HX_RAWDATA_NOT_READY;
-	g_sec_raw_buff->f_ready_lp_rawdata = HX_RAWDATA_NOT_READY;
-	g_sec_raw_buff->f_ready_lp_noise = HX_RAWDATA_NOT_READY;
-	g_sec_raw_buff->f_ready_gap_ver = HX_RAWDATA_NOT_READY;
-	g_sec_raw_buff->f_ready_gap_hor = HX_RAWDATA_NOT_READY;
+    I("Now init rawdata buffs\n");
+    g_sec_raw_buff = kzalloc(sizeof(struct sec_rawdata_buffs), GFP_KERNEL);
+    g_sec_raw_buff->_rawdata = kzalloc(sizeof(uint32_t) * ic_data->HX_TX_NUM * ic_data->HX_RX_NUM, GFP_KERNEL);
+    g_sec_raw_buff->_open = kzalloc(sizeof(uint32_t) * ic_data->HX_TX_NUM * ic_data->HX_RX_NUM, GFP_KERNEL);
+    g_sec_raw_buff->_mopen = kzalloc(sizeof(uint32_t) * ic_data->HX_TX_NUM * ic_data->HX_RX_NUM, GFP_KERNEL);
+    g_sec_raw_buff->_short = kzalloc(sizeof(uint32_t) * ic_data->HX_TX_NUM * ic_data->HX_RX_NUM, GFP_KERNEL);
+    g_sec_raw_buff->_noise = kzalloc(sizeof(int) * ic_data->HX_TX_NUM * ic_data->HX_RX_NUM, GFP_KERNEL);
+    g_sec_raw_buff->_lp_rawdata = kzalloc(sizeof(uint32_t) * ic_data->HX_TX_NUM * ic_data->HX_RX_NUM, GFP_KERNEL);
+    g_sec_raw_buff->_lp_noise = kzalloc(sizeof(int) * ic_data->HX_TX_NUM * ic_data->HX_RX_NUM, GFP_KERNEL);
+    g_sec_raw_buff->_gap_ver = kzalloc(sizeof(int) * (ic_data->HX_TX_NUM - g_gap_vertical_partial) * ic_data->HX_RX_NUM, GFP_KERNEL);
+    g_sec_raw_buff->_gap_hor = kzalloc(sizeof(int) * ic_data->HX_TX_NUM * (ic_data->HX_RX_NUM - g_gap_horizontal_partial), GFP_KERNEL);
+    g_sec_raw_buff->f_crtra_ready = HX_THRESHOLD_NOT_READY;
+    g_sec_raw_buff->f_ready_rawdata = HX_RAWDATA_NOT_READY;
+    g_sec_raw_buff->f_ready_open = HX_RAWDATA_NOT_READY;
+    g_sec_raw_buff->f_ready_mopen = HX_RAWDATA_NOT_READY;
+    g_sec_raw_buff->f_ready_short = HX_RAWDATA_NOT_READY;
+    g_sec_raw_buff->f_ready_noise = HX_RAWDATA_NOT_READY;
+    g_sec_raw_buff->f_ready_lp_rawdata = HX_RAWDATA_NOT_READY;
+    g_sec_raw_buff->f_ready_lp_noise = HX_RAWDATA_NOT_READY;
+    g_sec_raw_buff->f_ready_gap_ver = HX_RAWDATA_NOT_READY;
+    g_sec_raw_buff->f_ready_gap_hor = HX_RAWDATA_NOT_READY;
 
-	return 0;
+    // Create the sysfs class
+    ret = sysfs_create_group(&data->sec.fac_dev->kobj, &sec_touch_factory_attr_group);
+    if (ret) {
+        E("%s %s: failed to create sysfs attributes\n", HIMAX_LOG_TAG, __func__);
+        goto err_sysfs_create_group;
+    }
 
+    return 0;
+
+err_sysfs_create_group:
+    kfree(g_sec_raw_buff->_gap_hor);
+    kfree(g_sec_raw_buff->_gap_ver);
+    kfree(g_sec_raw_buff->_lp_noise);
+    kfree(g_sec_raw_buff->_lp_rawdata);
+    kfree(g_sec_raw_buff->_noise);
+    kfree(g_sec_raw_buff->_short);
+    kfree(g_sec_raw_buff->_mopen);
+    kfree(g_sec_raw_buff->_open);
+    kfree(g_sec_raw_buff->_rawdata);
+    kfree(g_sec_raw_buff);
 err_init_cmd:
-	return -ENODEV;
+    return -ENODEV;
 }
+
 EXPORT_SYMBOL(sec_touch_sysfs);
 
 void sec_touch_sysfs_remove(struct himax_ts_data *data)
 {
-	E("%s %s: Entering!\n", HIMAX_LOG_TAG, __func__);
-	sec_cmd_exit(&data->sec, SEC_CLASS_DEVT_TSP);
+    E("%s %s: Entering!\n", HIMAX_LOG_TAG, __func__);
 
-	I("Now remove raw data buffs\n");
+    // Remove the sysfs link
+    sysfs_remove_link(&data->sec.fac_dev->kobj, "input");
 
-	kfree(g_sec_raw_buff->_rawdata);
-	kfree(g_sec_raw_buff->_open);
-	kfree(g_sec_raw_buff->_mopen);
-	kfree(g_sec_raw_buff->_short);
-	kfree(g_sec_raw_buff->_noise);
-	kfree(g_sec_raw_buff->_lp_rawdata);
-	kfree(g_sec_raw_buff->_lp_noise);
-	kfree(g_sec_raw_buff->_gap_ver);
-	kfree(g_sec_raw_buff->_gap_hor);
-	g_sec_raw_buff->f_crtra_ready = HX_THRESHOLD_NOT_READY;
-	g_sec_raw_buff->f_ready_rawdata = HX_RAWDATA_NOT_READY;
-	g_sec_raw_buff->f_ready_open = HX_RAWDATA_NOT_READY;
-	g_sec_raw_buff->f_ready_mopen = HX_RAWDATA_NOT_READY;
-	g_sec_raw_buff->f_ready_short = HX_RAWDATA_NOT_READY;
-	g_sec_raw_buff->f_ready_noise = HX_RAWDATA_NOT_READY;
-	g_sec_raw_buff->f_ready_lp_rawdata = HX_RAWDATA_NOT_READY;
-	g_sec_raw_buff->f_ready_lp_noise = HX_RAWDATA_NOT_READY;
-	g_sec_raw_buff->f_ready_gap_ver = HX_RAWDATA_NOT_READY;
-	g_sec_raw_buff->f_ready_gap_hor = HX_RAWDATA_NOT_READY;
+    // Remove the sysfs group
+    sysfs_remove_group(&data->sec.fac_dev->kobj, &sec_touch_factory_attr_group);
 
-	kfree(g_sec_raw_buff);
-	E("%s %s: End!\n", HIMAX_LOG_TAG,
-			__func__);
+    // Exit sec_cmd
+    sec_cmd_exit(&data->sec, SEC_CLASS_DEVT_TSP);
+
+    I("Now remove raw data buffs\n");
+
+    kfree(g_sec_raw_buff->_rawdata);
+    kfree(g_sec_raw_buff->_open);
+    kfree(g_sec_raw_buff->_mopen);
+    kfree(g_sec_raw_buff->_short);
+    kfree(g_sec_raw_buff->_noise);
+    kfree(g_sec_raw_buff->_lp_rawdata);
+    kfree(g_sec_raw_buff->_lp_noise);
+    kfree(g_sec_raw_buff->_gap_ver);
+    kfree(g_sec_raw_buff->_gap_hor);
+    g_sec_raw_buff->f_crtra_ready = HX_THRESHOLD_NOT_READY;
+    g_sec_raw_buff->f_ready_rawdata = HX_RAWDATA_NOT_READY;
+    g_sec_raw_buff->f_ready_open = HX_RAWDATA_NOT_READY;
+    g_sec_raw_buff->f_ready_mopen = HX_RAWDATA_NOT_READY;
+    g_sec_raw_buff->f_ready_short = HX_RAWDATA_NOT_READY;
+    g_sec_raw_buff->f_ready_noise = HX_RAWDATA_NOT_READY;
+    g_sec_raw_buff->f_ready_lp_rawdata = HX_RAWDATA_NOT_READY;
+    g_sec_raw_buff->f_ready_lp_noise = HX_RAWDATA_NOT_READY;
+    g_sec_raw_buff->f_ready_gap_ver = HX_RAWDATA_NOT_READY;
+    g_sec_raw_buff->f_ready_gap_hor = HX_RAWDATA_NOT_READY;
+
+    kfree(g_sec_raw_buff);
+
+    E("%s %s: End!\n", HIMAX_LOG_TAG, __func__);
 }
 
 EXPORT_SYMBOL(sec_touch_sysfs_remove);
