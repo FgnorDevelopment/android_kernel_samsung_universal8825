@@ -3515,7 +3515,7 @@ static int abox_disable(struct device *dev)
 	abox_gic_disable_irq(data->dev_gic);
 	abox_failsafe_report_reset(dev);
 	if (data->debug_mode != DEBUG_MODE_NONE)
-		abox_dbg_dump_suspend(dev, data);
+		abox_dbg_dump_simple(dev, data, "suspend");
 	abox_power_notifier_call_chain(data, false);
 	abox_cleanup(data);
 	abox_set_minimum_stable_qos(data, false);
