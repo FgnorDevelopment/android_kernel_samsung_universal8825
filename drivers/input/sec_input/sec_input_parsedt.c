@@ -243,7 +243,8 @@ void sec_input_support_feature_parse_dt(struct device *dev)
 
 	pdata->dev = dev;
 	pdata->regulator_boot_on = of_property_read_bool(np, "sec,regulator_boot_on");
-	pdata->support_dex = of_property_read_bool(np, "support_dex_mode");
+	// pdata->support_dex = of_property_read_bool(np, "support_dex_mode");
+	pdata->support_dex = false;
 	pdata->support_fod = of_property_read_bool(np, "support_fod");
 	pdata->support_fod_lp_mode = of_property_read_bool(np, "support_fod_lp_mode");
 	pdata->support_fod_control = of_property_read_bool(np, "support_fod_control");
