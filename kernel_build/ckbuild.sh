@@ -345,6 +345,8 @@ build() {
     export LLVM_IAS=1
     export ARCH=arm64
 
+    rm -rf "$MOD_OUTDIR" 2>/dev/null
+
     make -j$(nproc --all) O=out CC="clang" CROSS_COMPILE="$CCARM64_PREFIX" $DEFCONFIG 2>&1 | tee log.txt
 
     # Delete leftovers
