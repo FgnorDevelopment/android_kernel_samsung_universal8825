@@ -46,10 +46,11 @@ fi
 export PATH="$(pwd)/kernel_build/bin:$PATH"
 
 # Directories
-AC_DIR="$WP/aospclang"
-PC_DIR="$WP/protonclang"
-LZ_DIR="$WP/lolzclang"
-SL_DIR="$WP/slimllvm"
+TC_DIR="$WP/toolchains"
+AC_DIR="$TC_DIR/aospclang"
+PC_DIR="$TC_DIR/protonclang"
+LZ_DIR="$TC_DIR/lolzclang"
+SL_DIR="$TC_DIR/slimllvm"
 AK3_DIR="$WP/AK3-a25x"
 AK3_BRANCH="unity"
 KDIR="$(readlink -f .)"
